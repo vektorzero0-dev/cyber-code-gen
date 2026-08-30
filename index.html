@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CYBER_GEN // ZEEO FULLSTACK</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      font-family: 'Fira Code', monospace;
+      background-color: #030712;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    #matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    #ui-wrapper {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      width: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .glow-green { text-shadow: 0 0 10px rgba(16, 185, 129, 0.8); }
+    .glow-box-green { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2), inset 0 0 10px rgba(16, 185, 129, 0.1); }
+    .glow-box-pink { box-shadow: 0 0 20px rgba(236, 72, 153, 0.5); }
+
+    #ui-wrapper::-webkit-scrollbar { width: 4px; }
+    #ui-wrapper::-webkit-scrollbar-thumb { background: #10b981; border-radius: 2px; }
+  </style>
+</head>
+<body class="text-emerald-400 select-none">
+
+  <canvas id="matrixCanvas"></canvas>
+
+  <div id="ui-wrapper">
+    <div class="min-h-screen flex flex-col p-4 sm:p-6 w-full max-w-xl mx-auto">
+      
+      <header class="w-full border-b border-emerald-500/40 pb-3 mb-4 flex justify-between items-center backdrop-blur-sm bg-black/60 p-3 rounded-lg">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <h1 class="text-lg sm:text-xl font-bold tracking-wider text-emerald-300 glow-green">
+            CYBER_GEN<span class="text-xs text-pink-500 font-normal ml-1">v4.0</span>
+          </h1>
+        </div>
+        <span class="text-[10px] border border-emerald-500/40 px-2 py-0.5 rounded bg-emerald-950/70 text-emerald-300">
+          SYS_ONLINE
+        </span>
+      </header>
+
+      <main class="w-full space-y-4 flex-1">
+        
+        <div class="bg-gray-950/90 border border-emerald-500/40 rounded-lg p-3 glow-box-green backdrop-blur-sm">
+          <label class="block text-xs font-semibold text-emerald-400 mb-1.5 flex justify-between">
+            <span>[01] INPUT_PROMPT_TERMINAL</span>
+            <span class="text-emerald-700 text-[10px]">ZEEO_ENGINE</span>
+          </label>
+          <textarea id="prompt" rows="5" placeholder="// Ketik perintah koding di sini..." 
+            class="w-full bg-black/80 border border-emerald-800 rounded-md p-2.5 text-xs text-emerald-200 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 font-mono resize-none"></textarea>
+        </div>
+
+        <button onclick="generateCode()" id="btnGenerate" 
+          class="w-full py-3.5 bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs tracking-widest rounded-lg transition-all duration-200 glow-box-pink active:scale-95 uppercase">
+          &gt; EXECUTE_GENERATION &lt;
+        </button>
+
+        <div class="bg-gray-950/95 border border-emerald-500/40 rounded-lg p-3 glow-box-green backdrop-blur-sm">
+          <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-emerald-900/80">
+            <span class="text-xs font-semibold text-emerald-400">[02] GENERATED_CODE</span>
+            <button onclick="copyOutput()" class="text-[10px] text-pink-400 hover:text-pink-300 font-semibold">[COPY]</button>
+          </div>
+          <pre id="output" class="text-[11px] text-emerald-300 font-mono overflow-x-auto min-h-[100px] max-h-[300px] sm:max-h-[400px] whitespace-pre-wrap break-words leading-relaxed">
+// Menunggu input...
+          </pre>
+        </div>
+
+      </main>
+
+      <footer class="w-full mt-6 pt-3 border-t border-emerald-500/20 text-center text-[10px] text-emerald-600 space-y-1 bg-black/40 p-2 rounded-lg">
+        <p class="font-semibold tracking-wider text-emerald-400">
+          DEVELOPER: <span class="text-pink-500 glow-green">ZEEO</span>
+        </p>
+        <div class="flex justify-center items-center gap-4 text-[9px]">
+          <span>Email: vektorzero0@gmail.com</span>
+          <span>|</span>
+          <span>WA: 082371729760</span>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <script>
+    /* --- Matrix Rain Animation --- */
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    let drops = [];
+    let fontSize = 16;
+    const chars = '01日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ';
+
+    function initMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const columns = Math.floor(canvas.width / fontSize);
+      drops = [];
+      for (let i = 0; i < columns; i++) {
+        drops[i] = Math.floor(Math.random() * - canvas.height / fontSize); 
+      }
+    }
+
+    function renderMatrix() {
+      ctx.fillStyle = 'rgba(3, 7, 18, 0.08)'; 
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0f9b6e';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      requestAnimationFrame(renderMatrix);
+    }
+
+    initMatrix();
+    renderMatrix();
+    window.addEventListener('resize', initMatrix);
+
+    /* --- Request ke Backend Serverless Vercel --- */
+    async function generateCode() {
+      const prompt = document.getElementById('prompt').value.trim();
+      const output = document.getElementById('output');
+      const btn = document.getElementById('btnGenerate');
+
+      if (!prompt) {
+        output.innerText = '// ERROR: Prompt tidak boleh kosong!';
+        output.classList.add('text-pink-500');
+        return;
+      }
+
+      document.activeElement.blur();
+      output.classList.remove('text-pink-500');
+      btn.disabled = true;
+      btn.innerText = 'GENERATING...';
+      output.innerText = '> CONNECTING_TO_BACKEND...\n> WAITING_RESPONSE...';
+
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          output.innerText = data.candidates[0].content.parts[0].text;
+        } else {
+          output.innerText = '// ERROR: Gagal memproses response dari backend.';
+          output.classList.add('text-pink-500');
+        }
+      } catch (err) {
+        output.innerText = '// SERVER_ERROR: ' + err.message;
+        output.classList.add('text-pink-500');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '> EXECUTE_GENERATION <';
+      }
+    }
+
+    function copyOutput() {
+      navigator.clipboard.writeText(document.getElementById('output').innerText).then(() => {
+        alert('Kode disalin!');
+      });
+    }
+  </script>
+</body>
+</html>
