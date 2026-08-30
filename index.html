@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SYNTAX_FORGE // ZEEO TERMINAL</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <!-- Parser Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   
   <style>
     html, body {
       font-family: 'Share Tech Mono', 'Fira Code', monospace;
-      background-color: #01060e;
+      background-color: #04080e;
       margin: 0;
       padding: 0;
       height: 100%;
@@ -21,16 +21,17 @@
       color: #00ff66;
     }
 
-    /* Efek Garis Monitor CRT Scanline */
+    /* Scanline Tipis & Halus (Tidak Mengganggu Matateks) */
     body::before {
       content: " ";
       display: block;
       position: absolute;
       top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(0, 255, 102, 0.03), rgba(0, 243, 255, 0.02));
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
       z-index: 100;
-      background-size: 100% 3px, 6px 100%;
+      background-size: 100% 4px;
       pointer-events: none;
+      opacity: 0.7;
     }
 
     #ui-wrapper {
@@ -42,34 +43,19 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* --- TEKS ULTRA NEON GLITCH (MENYALA TAJAM) --- */
-    .hacker-title-ultra {
+    /* --- TITLE HACKER SHARP & CLEVER --- */
+    .hacker-title-sharp {
       font-family: 'Share Tech Mono', monospace;
       font-weight: 700;
       text-transform: uppercase;
       position: relative;
       display: inline-block;
       color: #00ff66;
-      letter-spacing: 3px;
-      text-shadow: 
-        0 0 5px #00ff66,
-        0 0 10px #00ff66,
-        0 0 20px #00ff66,
-        0 0 40px #00f3ff,
-        0 0 80px #00f3ff;
-      animation: neonPulse 1.5s infinite alternate;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
     }
 
-    @keyframes neonPulse {
-      0% {
-        filter: drop-shadow(0 0 8px rgba(0, 255, 102, 0.9)) drop-shadow(0 0 20px rgba(0, 243, 255, 0.8));
-      }
-      100% {
-        filter: drop-shadow(0 0 15px rgba(0, 255, 102, 1)) drop-shadow(0 0 35px rgba(0, 243, 255, 1));
-      }
-    }
-
-    .hacker-title-ultra::before, .hacker-title-ultra::after {
+    .hacker-title-sharp::before, .hacker-title-sharp::after {
       content: attr(data-text);
       position: absolute;
       top: 0;
@@ -78,51 +64,48 @@
       height: 100%;
     }
 
-    .hacker-title-ultra::before {
-      left: 2px;
-      text-shadow: -2px 0 #00f3ff;
+    .hacker-title-sharp::before {
+      left: 1px;
+      text-shadow: -1px 0 #00f3ff;
       clip: rect(24px, 550px, 90px, 0);
-      animation: glitch-anim-1 1.8s infinite linear alternate-reverse;
+      animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
     }
 
-    .hacker-title-ultra::after {
-      left: -2px;
-      text-shadow: -2px 0 #00ff66;
+    .hacker-title-sharp::after {
+      left: -1px;
+      text-shadow: -1px 0 #00ff66;
       clip: rect(85px, 550px, 140px, 0);
-      animation: glitch-anim-2 2.2s infinite linear alternate-reverse;
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
     }
 
     @keyframes glitch-anim-1 {
-      0% { clip: rect(10px, 9999px, 85px, 0); transform: skew(0.8deg); }
-      20% { clip: rect(65px, 9999px, 15px, 0); transform: skew(-1.2deg); }
-      40% { clip: rect(30px, 9999px, 75px, 0); transform: skew(1.5deg); }
-      60% { clip: rect(90px, 9999px, 5px, 0); transform: skew(-0.8deg); }
-      80% { clip: rect(15px, 9999px, 50px, 0); transform: skew(1deg); }
-      100% { clip: rect(70px, 9999px, 35px, 0); transform: skew(-0.4deg); }
+      0% { clip: rect(10px, 9999px, 85px, 0); transform: skew(0.5deg); }
+      20% { clip: rect(65px, 9999px, 15px, 0); transform: skew(-0.5deg); }
+      40% { clip: rect(30px, 9999px, 75px, 0); transform: skew(0.8deg); }
+      60% { clip: rect(90px, 9999px, 5px, 0); transform: skew(-0.5deg); }
+      80% { clip: rect(15px, 9999px, 50px, 0); transform: skew(0.5deg); }
+      100% { clip: rect(70px, 9999px, 35px, 0); transform: skew(-0.2deg); }
     }
 
     @keyframes glitch-anim-2 {
-      0% { clip: rect(50px, 9999px, 20px, 0); transform: skew(-0.8deg); }
-      20% { clip: rect(15px, 9999px, 90px, 0); transform: skew(1.2deg); }
-      40% { clip: rect(80px, 9999px, 10px, 0); transform: skew(-1.5deg); }
-      60% { clip-path: inset(10% 0 80% 0); transform: skew(0.5deg); }
-      80% { clip: rect(40px, 9999px, 60px, 0); transform: skew(-0.9deg); }
-      100% { clip: rect(25px, 9999px, 95px, 0); transform: skew(0.6deg); }
+      0% { clip: rect(50px, 9999px, 20px, 0); transform: skew(-0.5deg); }
+      20% { clip: rect(15px, 9999px, 90px, 0); transform: skew(0.5deg); }
+      40% { clip: rect(80px, 9999px, 10px, 0); transform: skew(-0.8deg); }
+      60% { clip-path: inset(10% 0 80% 0); transform: skew(0.3deg); }
+      80% { clip: rect(40px, 9999px, 60px, 0); transform: skew(-0.5deg); }
+      100% { clip: rect(25px, 9999px, 95px, 0); transform: skew(0.2deg); }
     }
 
-    /* --- KOTAK TERMINAL MENYALA HIGH-GLOW --- */
+    /* --- KOTAK TERMINAL MODEREN & TAJAM --- */
     .glow-box-cyber { 
       position: relative;
-      background: rgba(2, 12, 24, 0.92);
-      border: 1px solid #00ff66;
-      box-shadow: 
-        0 0 15px rgba(0, 255, 102, 0.4),
-        0 0 30px rgba(0, 243, 255, 0.2),
-        inset 0 0 20px rgba(0, 255, 102, 0.15);
+      background: rgba(6, 15, 25, 0.95);
+      border: 1px solid rgba(0, 255, 102, 0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(0, 255, 102, 0.03);
       overflow: hidden;
     }
 
-    /* Canvas Matrix di Dalam Kotak */
+    /* Matrix Rain Latar Belakang Kotak (Halus) */
     .box-matrix-canvas {
       position: absolute;
       top: 0;
@@ -131,7 +114,7 @@
       height: 100%;
       z-index: 1;
       pointer-events: none;
-      opacity: 0.35;
+      opacity: 0.15;
     }
 
     .box-content {
@@ -139,42 +122,32 @@
       z-index: 2;
     }
 
-    /* --- TOMBOL HIGH-VOLTAGE LASER GLOW --- */
+    /* --- TOMBOL TERMINAL EXECUTIVE --- */
     .glow-btn-cyber {
-      background: linear-gradient(90deg, #00ff66, #00f3ff, #00ff66);
-      background-size: 200% 100%;
-      color: #000;
-      font-weight: 900;
-      text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
-      box-shadow: 
-        0 0 20px #00ff66,
-        0 0 40px rgba(0, 243, 255, 0.8),
-        inset 0 0 10px #ffffff;
-      animation: glowBtnMove 3s linear infinite;
+      background: #00ff66;
+      color: #030a12;
+      font-weight: 700;
+      letter-spacing: 2px;
+      border: 1px solid #00ff66;
+      box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
       transition: all 0.2s ease;
     }
 
-    @keyframes glowBtnMove {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-
     .glow-btn-cyber:hover {
-      box-shadow: 
-        0 0 35px #00ff66,
-        0 0 60px #00f3ff,
-        0 0 15px #ffffff;
-      transform: scale(1.01);
+      background: #00f3ff;
+      border-color: #00f3ff;
+      box-shadow: 0 0 25px rgba(0, 243, 255, 0.5);
+      transform: translateY(-1px);
     }
 
     .cyber-card {
       clip-path: polygon(
         0 0, 
-        calc(100% - 15px) 0, 
-        100% 15px, 
+        calc(100% - 12px) 0, 
+        100% 12px, 
         100% 100%, 
-        15px 100%, 
-        0 calc(100% - 15px)
+        12px 100%, 
+        0 calc(100% - 12px)
       );
     }
 
@@ -184,25 +157,24 @@
       user-select: text !important;
     }
 
-    /* Code Container UI */
+    /* --- CODE CONTAINER STYLING --- */
     .code-container {
       position: relative;
-      background-color: #000914;
-      border: 1px solid #00ff66;
+      background-color: #02070d;
+      border: 1px solid rgba(0, 255, 102, 0.25);
       border-radius: 4px;
       margin: 12px 0;
       overflow: hidden;
-      box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
     }
 
     .code-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #021a2e;
+      background-color: #081524;
       padding: 6px 12px;
       font-size: 11px;
-      border-bottom: 1px solid #00ff66;
+      border-bottom: 1px solid rgba(0, 255, 102, 0.2);
     }
 
     .code-container pre {
@@ -210,26 +182,16 @@
       padding: 12px;
       overflow-x: auto;
       color: #00ff66;
-      text-shadow: 0 0 5px rgba(0, 255, 102, 0.6);
       font-size: 11px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
-    .markdown-body p { 
-      margin-bottom: 8px; 
-      color: #67e8f9; 
-      text-shadow: 0 0 6px rgba(103, 232, 249, 0.4); 
-    }
+    .markdown-body p { margin-bottom: 8px; color: #7dd3fc; }
     .markdown-body ul, .markdown-body ol { margin-left: 20px; list-style-type: disc; color: #86efac; }
-    .markdown-body h1, .markdown-body h2, .markdown-body h3 { 
-      font-weight: bold; 
-      color: #00ff66; 
-      text-shadow: 0 0 10px #00ff66;
-      margin-top: 10px; 
-    }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 { font-weight: bold; color: #00ff66; margin-top: 10px; }
 
     #ui-wrapper::-webkit-scrollbar { width: 4px; }
-    #ui-wrapper::-webkit-scrollbar-thumb { background: #00ff66; box-shadow: 0 0 10px #00ff66; border-radius: 2px; }
+    #ui-wrapper::-webkit-scrollbar-thumb { background: rgba(0, 255, 102, 0.4); border-radius: 2px; }
   </style>
 </head>
 <body>
@@ -237,19 +199,19 @@
   <div id="ui-wrapper">
     <div class="min-h-screen flex flex-col p-4 sm:p-6 w-full max-w-xl mx-auto justify-between">
       
-      <!-- Header Cyber Ambient Neon -->
-      <header class="w-full border-b-2 border-emerald-400 pb-3 mb-4 flex justify-between items-center backdrop-blur-md bg-slate-950/90 p-3 rounded-lg border-l-4 border-l-cyan-400 shadow-[0_0_25px_rgba(0,255,102,0.3)] select-none">
+      <!-- Header Terminal -->
+      <header class="w-full border-b border-emerald-500/30 pb-3 mb-4 flex justify-between items-center backdrop-blur-md bg-slate-950/80 p-3 rounded-lg border-l-2 border-l-emerald-400 select-none">
         <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping shadow-[0_0_12px_#00ff66]"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <div class="flex flex-col">
-            <h1 class="text-xl sm:text-2xl tracking-wider">
-              <span class="hacker-title-ultra" data-text="SYNTAX_FORGE">SYNTAX_FORGE</span>
+            <h1 class="text-lg sm:text-xl tracking-wider">
+              <span class="hacker-title-sharp" data-text="SYNTAX_FORGE">SYNTAX_FORGE</span>
             </h1>
-            <span class="text-[9px] text-cyan-300 tracking-widest -mt-1 font-bold drop-shadow-[0_0_5px_#00f3ff]">TERMINAL // AI_CORE v6.0</span>
+            <span class="text-[9px] text-cyan-400 tracking-widest -mt-1 font-bold">TERMINAL // AI_CORE v6.0</span>
           </div>
         </div>
-        <span class="text-[10px] border-2 border-emerald-400 px-2.5 py-1 rounded bg-emerald-950/90 text-emerald-300 tracking-widest font-black animate-pulse shadow-[0_0_15px_#00ff66]">
-          SYSTEM_ONLINE
+        <span class="text-[10px] border border-emerald-500/40 px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 tracking-widest font-semibold">
+          ONLINE
         </span>
       </header>
 
@@ -260,19 +222,19 @@
         <div class="glow-box-cyber p-3.5 backdrop-blur-md cyber-card relative">
           <canvas class="box-matrix-canvas" id="canvasInput"></canvas>
           <div class="box-content">
-            <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400 shadow-[0_0_8px_#00f3ff]"></div>
-            <label class="block text-xs font-bold text-emerald-400 mb-2 flex justify-between tracking-wider select-none drop-shadow-[0_0_5px_#00ff66]">
-              <span class="text-emerald-300 font-black flex items-center gap-1">&gt;_ INPUT_PAYLOAD</span>
-              <span class="text-cyan-300 text-[10px] font-bold">GEMINI_ENGINE</span>
+            <div class="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-cyan-400"></div>
+            <label class="block text-xs font-semibold text-emerald-400 mb-2 flex justify-between tracking-wider select-none">
+              <span class="text-emerald-300 font-bold flex items-center gap-1">&gt;_ INPUT_PAYLOAD</span>
+              <span class="text-cyan-400 text-[10px]">GEMINI_ENGINE</span>
             </label>
-            <textarea id="prompt" rows="4" placeholder="// Enter code prompt (e.g., generate PHP login script)..." 
-              class="w-full bg-black/90 border border-emerald-500/80 rounded p-2.5 text-xs text-emerald-300 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-mono resize-none leading-relaxed placeholder-emerald-800 selectable-text shadow-[inset_0_0_10px_rgba(0,255,102,0.2)]"></textarea>
+            <textarea id="prompt" rows="4" placeholder="// Masukkan prompt kode (contoh: buat script login PHP)..." 
+              class="w-full bg-black/80 border border-emerald-900/60 rounded p-2.5 text-xs text-emerald-300 focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 font-mono resize-none leading-relaxed placeholder-emerald-800 selectable-text"></textarea>
           </div>
         </div>
 
         <!-- Tombol Execute -->
         <button onclick="generateCode()" id="btnGenerate" 
-          class="w-full py-4 glow-btn-cyber text-slate-950 font-black text-xs tracking-widest active:scale-95 uppercase cyber-card select-none">
+          class="w-full py-3.5 glow-btn-cyber text-slate-950 font-bold text-xs tracking-widest active:scale-95 uppercase cyber-card select-none">
           &gt;&gt; EXECUTE_FORGE &lt;&lt;
         </button>
 
@@ -280,13 +242,13 @@
         <div class="glow-box-cyber p-3.5 backdrop-blur-md cyber-card relative">
           <canvas class="box-matrix-canvas" id="canvasOutput"></canvas>
           <div class="box-content">
-            <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-emerald-400 shadow-[0_0_8px_#00ff66]"></div>
-            <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-emerald-500/60 select-none">
-              <span class="text-xs font-black text-emerald-400 tracking-wider flex items-center gap-1 drop-shadow-[0_0_5px_#00ff66]">[02] FORGED_OUTPUT</span>
+            <div class="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-emerald-400"></div>
+            <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-emerald-900/40 select-none">
+              <span class="text-xs font-bold text-emerald-400 tracking-wider flex items-center gap-1">[02] FORGED_OUTPUT</span>
             </div>
             
             <div id="output" class="text-[11px] font-mono min-h-[120px] max-h-[400px] overflow-y-auto leading-relaxed selectable-text markdown-body">
-              <p class="text-emerald-600 drop-shadow-[0_0_3px_#00ff66]">// System idle. Waiting for payload execution...</p>
+              <p class="text-emerald-700">// System idle. Waiting for payload execution...</p>
             </div>
           </div>
         </div>
@@ -294,9 +256,9 @@
       </main>
 
       <!-- Footer -->
-      <footer class="w-full mt-6 pt-3 border-t border-emerald-500/40 text-center text-[10px] text-emerald-400 space-y-1 bg-slate-950/90 p-2 rounded-lg border-b-2 border-b-cyan-400 shadow-[0_0_15px_rgba(0,243,255,0.2)] select-none">
-        <p class="font-bold tracking-widest text-emerald-400 drop-shadow-[0_0_5px_#00ff66]">
-          SYSTEM_ARCHITECT: <span class="text-cyan-300 font-black tracking-widest drop-shadow-[0_0_8px_#00f3ff]">ZEEO</span>
+      <footer class="w-full mt-6 pt-3 border-t border-emerald-500/20 text-center text-[10px] text-emerald-600 space-y-1 bg-slate-950/80 p-2 rounded-lg select-none">
+        <p class="font-bold tracking-widest text-emerald-500">
+          SYSTEM_ARCHITECT: <span class="text-cyan-400 font-bold tracking-widest">ZEEO</span>
         </p>
       </footer>
 
@@ -304,7 +266,7 @@
   </div>
 
   <script>
-    /* --- High-Glow Green Matrix Rain Inside Boxes --- */
+    /* Matrix Rain Animation (Halus & Lembut) */
     function createBoxMatrix(canvasId) {
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
@@ -323,18 +285,16 @@
       }
 
       function draw() {
-        ctx.fillStyle = 'rgba(1, 6, 14, 0.15)';
+        ctx.fillStyle = 'rgba(4, 8, 14, 0.15)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#00ff66';
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = '#00ff66';
-        ctx.font = 'bold ' + fontSize + 'px monospace';
+        ctx.font = fontSize + 'px monospace';
         for (let i = 0; i < drops.length; i++) {
           const text = chars.charAt(Math.floor(Math.random() * chars.length));
           const x = i * fontSize;
           const y = drops[i] * fontSize;
           ctx.fillText(text, x, y);
-          if (y > canvas.height && Math.random() > 0.96) { drops[i] = 0; }
+          if (y > canvas.height && Math.random() > 0.97) { drops[i] = 0; }
           drops[i]++;
         }
         requestAnimationFrame(draw);
@@ -348,21 +308,21 @@
     createBoxMatrix('canvasInput');
     createBoxMatrix('canvasOutput');
 
-    /* --- Request Handler --- */
+    /* Request Handler */
     async function generateCode() {
       const prompt = document.getElementById('prompt').value.trim();
       const output = document.getElementById('output');
       const btn = document.getElementById('btnGenerate');
 
       if (!prompt) {
-        output.innerHTML = '<p class="text-red-400 drop-shadow-[0_0_8px_#ff0000]">// ERROR: Prompt payload is empty!</p>';
+        output.innerHTML = '<p class="text-red-400">// ERROR: Prompt payload is empty!</p>';
         return;
       }
 
       document.activeElement.blur();
       btn.disabled = true;
       btn.innerText = 'EXECUTING_PAYLOAD...';
-      output.innerHTML = '<p class="text-emerald-400 animate-pulse drop-shadow-[0_0_10px_#00ff66]">&gt; COMPILING_SOURCE_CODE...</p>';
+      output.innerHTML = '<p class="text-emerald-400 animate-pulse">&gt; COMPILING_SOURCE_CODE...</p>';
 
       try {
         const endpoint = window.location.hostname.includes('vercel.app') 
@@ -378,22 +338,22 @@
         const data = await response.json();
 
         if (data.error) {
-          output.innerHTML = `<p class="text-red-400 drop-shadow-[0_0_8px_#ff0000]">// BACKEND_ERROR: ${data.error}</p>`;
+          output.innerHTML = `<p class="text-red-400">// BACKEND_ERROR: ${data.error}</p>`;
         } else if (data.candidates && data.candidates[0].content.parts[0].text) {
           const rawText = data.candidates[0].content.parts[0].text;
           renderResponse(rawText);
         } else {
-          output.innerHTML = '<p class="text-red-400 drop-shadow-[0_0_8px_#ff0000]">// ERROR: Invalid response format.</p>';
+          output.innerHTML = '<p class="text-red-400">// ERROR: Invalid response format.</p>';
         }
       } catch (err) {
-        output.innerHTML = `<p class="text-red-400 drop-shadow-[0_0_8px_#ff0000]">// NETWORK_ERROR: ${err.message}</p>`;
+        output.innerHTML = `<p class="text-red-400">// NETWORK_ERROR: ${err.message}</p>`;
       } finally {
         btn.disabled = false;
         btn.innerText = '>> EXECUTE_FORGE <<';
       }
     }
 
-    /* --- Render Markdown Response + Copy Button --- */
+    /* Render Markdown Response */
     function renderResponse(text) {
       const output = document.getElementById('output');
       output.innerHTML = marked.parse(text);
@@ -412,8 +372,8 @@
         const header = document.createElement('div');
         header.className = 'code-header select-none';
         header.innerHTML = `
-          <span class="font-bold text-emerald-400 drop-shadow-[0_0_5px_#00ff66]">${langName}</span>
-          <button onclick="copySpecificCode(this)" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-400 px-2.5 py-1 rounded text-[10px] font-black transition active:scale-95 shadow-[0_0_10px_#00ff66]">
+          <span class="font-bold text-emerald-400">${langName}</span>
+          <button onclick="copySpecificCode(this)" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded text-[10px] font-bold transition active:scale-95">
             [COPY_CODE]
           </button>
         `;
