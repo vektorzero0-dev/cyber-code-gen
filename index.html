@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>VEKTOR ZERO CODE // ZEEO FULLSTACK</title>
+  <title>SYNTAX_FORGE // ZEEO FULLSTACK</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Parser Markdown untuk memisahkan Teks dan Blok Kode -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <!-- Parser Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   
   <style>
@@ -40,14 +40,90 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .glow-cyan { text-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.4); }
-    .glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.8); }
-    
-    .glow-box-cyan { 
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.25), inset 0 0 15px rgba(6, 182, 212, 0.1); 
+    /* --- ANIMASI GLOW BERGERAK & BERDENYUT --- */
+    @keyframes multiGlow {
+      0%, 100% {
+        text-shadow: 
+          0 0 5px #00f3ff,
+          0 0 10px #00f3ff,
+          0 0 20px #ff007f,
+          0 0 30px #ff007f;
+      }
+      50% {
+        text-shadow: 
+          0 0 10px #00ff66,
+          0 0 20px #00f3ff,
+          0 0 30px #a855f7,
+          0 0 40px #a855f7;
+      }
     }
-    .glow-btn { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
-    .glow-btn:hover { box-shadow: 0 0 25px rgba(6, 182, 212, 0.7); }
+
+    /* --- EFEK GLITCH TEXT ANIMATION --- */
+    .glitch-text {
+      position: relative;
+      display: inline-block;
+      font-weight: 900;
+      background: linear-gradient(90deg, #00f3ff, #ff007f, #00ff66);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: multiGlow 3s infinite alternate;
+    }
+
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #020617;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    .glitch-text::before {
+      left: -2px;
+      text-shadow: 2px 0 #ff007f;
+      animation: glitch-anim-1 2s infinite linear alternate-reverse;
+    }
+
+    .glitch-text::after {
+      left: 2px;
+      text-shadow: -2px 0 #00f3ff;
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-anim-1 {
+      0% { clip: rect(20px, 9999px, 15px, 0); }
+      20% { clip: rect(42px, 9999px, 85px, 0); }
+      40% { clip: rect(10px, 9999px, 55px, 0); }
+      60% { clip: rect(70px, 9999px, 25px, 0); }
+      80% { clip: rect(35px, 9999px, 90px, 0); }
+      100% { clip: rect(5px, 9999px, 40px, 0); }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% { clip: rect(80px, 9999px, 5px, 0); }
+      20% { clip: rect(12px, 9999px, 60px, 0); }
+      40% { clip: rect(90px, 9999px, 30px, 0); }
+      60% { clip: rect(25px, 9999px, 75px, 0); }
+      80% { clip: rect(60px, 9999px, 10px, 0); }
+      100% { clip: rect(30px, 9999px, 85px, 0); }
+    }
+
+    /* Cyber Boxes */
+    .glow-box-cyber { 
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 15px rgba(255, 0, 127, 0.15);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+    }
+
+    .glow-btn-gradient {
+      background: linear-gradient(135deg, #00f3ff, #ff007f);
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+    }
+    .glow-btn-gradient:hover {
+      box-shadow: 0 0 25px rgba(0, 243, 255, 0.8), 0 0 10px rgba(255, 0, 127, 0.8);
+    }
 
     .cyber-card {
       clip-path: polygon(
@@ -60,7 +136,6 @@
       );
     }
 
-    /* Styling Teks Bebas Diblok */
     .selectable-text {
       -webkit-user-select: text !important;
       -moz-user-select: text !important;
@@ -68,14 +143,15 @@
       user-select: text !important;
     }
 
-    /* Style Khusus untuk Blok Kode Mirip Tampilan ChatGPT/Gemini */
+    /* Code Container UI */
     .code-container {
       position: relative;
       background-color: #090d16;
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      border: 1px solid rgba(255, 0, 127, 0.3);
       border-radius: 6px;
       margin: 12px 0;
       overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
     }
 
     .code-header {
@@ -85,26 +161,25 @@
       background-color: #0f172a;
       padding: 6px 12px;
       font-size: 11px;
-      color: #94a3b8;
-      border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+      color: #38bdf8;
+      border-bottom: 1px solid rgba(255, 0, 127, 0.2);
     }
 
     .code-container pre {
       margin: 0;
       padding: 12px;
       overflow-x: auto;
-      color: #10b981;
+      color: #4ade80;
       font-size: 11px;
       line-height: 1.5;
     }
 
-    /* Style untuk Penjelasan Teks Biasa */
-    .markdown-body p { margin-bottom: 8px; color: #67e8f9; }
-    .markdown-body ul, .markdown-body ol { margin-left: 20px; list-style-type: disc; color: #a5f3fc; }
-    .markdown-body h1, .markdown-body h2, .markdown-body h3 { font-weight: bold; color: #22d3ee; margin-top: 10px; }
+    .markdown-body p { margin-bottom: 8px; color: #a5f3fc; }
+    .markdown-body ul, .markdown-body ol { margin-left: 20px; list-style-type: disc; color: #e0e7ff; }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 { font-weight: bold; color: #ff007f; margin-top: 10px; }
 
     #ui-wrapper::-webkit-scrollbar { width: 4px; }
-    #ui-wrapper::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 2px; }
+    #ui-wrapper::-webkit-scrollbar-thumb { background: #ff007f; border-radius: 2px; }
   </style>
 </head>
 <body class="text-cyan-400">
@@ -114,16 +189,18 @@
   <div id="ui-wrapper">
     <div class="min-h-screen flex flex-col p-4 sm:p-6 w-full max-w-xl mx-auto justify-between">
       
-      <!-- Header -->
-      <header class="w-full border-b border-cyan-500/40 pb-3 mb-4 flex justify-between items-center backdrop-blur-md bg-slate-950/80 p-3 rounded-lg border-l-2 border-l-cyan-400 select-none">
+      <!-- Header dengan Animasi Glitch & Glow Multi-Warna -->
+      <header class="w-full border-b border-pink-500/40 pb-3 mb-4 flex justify-between items-center backdrop-blur-md bg-slate-950/80 p-3 rounded-lg border-l-2 border-l-cyan-400 select-none">
         <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-          <h1 class="text-lg sm:text-xl font-bold tracking-wider text-cyan-300 glow-cyan">
-            CYBER_GEN<span class="text-xs text-emerald-400 font-normal ml-1">v6.0</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-ping"></span>
+          <!-- TEKS GLITCH SYNTAX_FORGE -->
+          <h1 class="text-xl sm:text-2xl tracking-widest">
+            <span class="glitch-text" data-text="SYNTAX_FORGE">SYNTAX_FORGE</span>
+            <span class="text-xs text-pink-400 font-normal ml-1 border border-pink-500/40 px-1 rounded bg-pink-950/40">v6.0</span>
           </h1>
         </div>
-        <span class="text-[10px] border border-cyan-500/50 px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-300 tracking-widest font-bold">
-          SYS_ONLINE
+        <span class="text-[10px] border border-cyan-400/50 px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-300 tracking-widest font-bold animate-pulse">
+          ONLINE
         </span>
       </header>
 
@@ -131,41 +208,40 @@
       <main class="w-full space-y-4 flex-1">
         
         <!-- Input Terminal -->
-        <div class="bg-slate-950/90 border border-cyan-500/40 p-3.5 glow-box-cyan backdrop-blur-md cyber-card relative">
-          <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400"></div>
+        <div class="bg-slate-950/90 p-3.5 glow-box-cyber backdrop-blur-md cyber-card relative">
+          <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-pink-500"></div>
           <label class="block text-xs font-semibold text-cyan-300 mb-2 flex justify-between tracking-wider select-none">
-            <span>[01] INPUT_TERMINAL_PROMPT</span>
-            <span class="text-emerald-400 text-[10px]">CORE_ENGINE</span>
+            <span class="text-pink-400 font-bold">[01] PROMPT_TERMINAL</span>
+            <span class="text-emerald-400 text-[10px]">CYBER_ENGINE</span>
           </label>
-          <textarea id="prompt" rows="4" placeholder="// Ketik permintaan di sini (misal: buatkan script login php)..." 
-            class="w-full bg-black/90 border border-cyan-900 rounded p-2.5 text-xs text-cyan-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-mono resize-none leading-relaxed placeholder-slate-600 selectable-text"></textarea>
+          <textarea id="prompt" rows="4" placeholder="// Masukkan perintah koding (contoh: buatkan script login php)..." 
+            class="w-full bg-black/90 border border-pink-900/60 rounded p-2.5 text-xs text-cyan-200 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 font-mono resize-none leading-relaxed placeholder-slate-600 selectable-text"></textarea>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Tombol Execute dengan Gradient & High-Glow -->
         <button onclick="generateCode()" id="btnGenerate" 
-          class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs tracking-widest transition-all duration-200 glow-btn active:scale-95 uppercase cyber-card select-none">
-          &gt;&gt; EXECUTE_GENERATION &lt;&lt;
+          class="w-full py-3.5 glow-btn-gradient text-slate-950 font-black text-xs tracking-widest transition-all duration-200 active:scale-95 uppercase cyber-card select-none">
+          &gt;&gt; EXECUTE_FORGING &lt;&lt;
         </button>
 
         <!-- Output Container -->
-        <div class="bg-slate-950/95 border border-cyan-500/40 p-3.5 glow-box-cyan backdrop-blur-md cyber-card relative">
+        <div class="bg-slate-950/95 p-3.5 glow-box-cyber backdrop-blur-md cyber-card relative">
           <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400"></div>
-          <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-cyan-900/80 select-none">
-            <span class="text-xs font-semibold text-cyan-300 tracking-wider">[02] GENERATED_OUTPUT</span>
+          <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-pink-900/40 select-none">
+            <span class="text-xs font-bold text-pink-400 tracking-wider">[02] FORGED_CODE_OUTPUT</span>
           </div>
           
-          <!-- Area Tempat Hasil Render Markdown dan Kode -->
           <div id="output" class="text-[11px] font-mono min-h-[120px] max-h-[400px] overflow-y-auto leading-relaxed selectable-text markdown-body">
-            <p class="text-slate-500">// System idle. Waiting for input prompt...</p>
+            <p class="text-slate-500">// System idle. Awaiting instruction prompt...</p>
           </div>
         </div>
 
       </main>
 
       <!-- Footer -->
-      <footer class="w-full mt-6 pt-3 border-t border-cyan-500/20 text-center text-[10px] text-cyan-600 space-y-1 bg-slate-950/80 p-2 rounded-lg border-b-2 border-b-cyan-500/40 select-none">
+      <footer class="w-full mt-6 pt-3 border-t border-pink-500/20 text-center text-[10px] text-cyan-600 space-y-1 bg-slate-950/80 p-2 rounded-lg border-b-2 border-b-pink-500/40 select-none">
         <p class="font-bold tracking-widest text-cyan-400">
-          DEV: <span class="text-emerald-400 glow-emerald">ZEEO</span>
+          DEVELOPER: <span class="text-pink-500 font-black tracking-widest">ZEEO</span>
         </p>
       </footer>
 
@@ -173,7 +249,7 @@
   </div>
 
   <script>
-    /* --- Matrix Background --- */
+    /* --- Matrix Rain Animation --- */
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
     let drops = [];
@@ -207,21 +283,21 @@
     renderMatrix();
     window.addEventListener('resize', initMatrix);
 
-    /* --- Request ke Backend --- */
+    /* --- Request Handler --- */
     async function generateCode() {
       const prompt = document.getElementById('prompt').value.trim();
       const output = document.getElementById('output');
       const btn = document.getElementById('btnGenerate');
 
       if (!prompt) {
-        output.innerHTML = '<p class="text-red-400">// ERROR: Prompt terminal tidak boleh kosong!</p>';
+        output.innerHTML = '<p class="text-red-400">// ERROR: Prompt tidak boleh kosong!</p>';
         return;
       }
 
       document.activeElement.blur();
       btn.disabled = true;
-      btn.innerText = 'PROCESSING_DATA...';
-      output.innerHTML = '<p class="text-emerald-400 animate-pulse">> GENERATING_RESPONSE...</p>';
+      btn.innerText = 'FORGING_CODE...';
+      output.innerHTML = '<p class="text-pink-400 animate-pulse">&gt; FORGING_SOURCE_CODE...</p>';
 
       try {
         const endpoint = window.location.hostname.includes('vercel.app') 
@@ -242,68 +318,58 @@
           const rawText = data.candidates[0].content.parts[0].text;
           renderResponse(rawText);
         } else {
-          output.innerHTML = '<p class="text-red-400">// ERROR: Format data AI tidak dikenali.</p>';
+          output.innerHTML = '<p class="text-red-400">// ERROR: Respon tidak valid.</p>';
         }
       } catch (err) {
         output.innerHTML = `<p class="text-red-400">// NETWORK_ERROR: ${err.message}</p>`;
       } finally {
         btn.disabled = false;
-        btn.innerText = '>> EXECUTE_GENERATION <<';
+        btn.innerText = '>> EXECUTE_FORGING <<';
       }
     }
 
-    /* --- Fungsi Membuat Kotak Kode + Tombol Copy Khusus --- */
+    /* --- Render Response & Separated Copy Button --- */
     function renderResponse(text) {
       const output = document.getElementById('output');
-      
-      // Parse markdown menjadi HTML
-      const htmlContent = marked.parse(text);
-      output.innerHTML = htmlContent;
+      output.innerHTML = marked.parse(text);
 
-      // Cari semua elemen <pre><code> dan bungkus dengan Kotak + Tombol Copy
       const codeBlocks = output.querySelectorAll('pre');
-      codeBlocks.forEach((pre, index) => {
+      codeBlocks.forEach((pre) => {
         const codeElement = pre.querySelector('code');
         const codeText = codeElement ? codeElement.innerText : pre.innerText;
         
-        // Deteksi Bahasa (jika ada)
         const langClass = codeElement ? Array.from(codeElement.classList).find(c => c.startsWith('language-')) : '';
         const langName = langClass ? langClass.replace('language-', '').toUpperCase() : 'CODE';
 
-        // Buat Container Khusus
         const container = document.createElement('div');
         container.className = 'code-container';
 
-        // Buat Baris Header untuk Kode
         const header = document.createElement('div');
         header.className = 'code-header select-none';
         header.innerHTML = `
-          <span>${langName}</span>
-          <button onclick="copySpecificCode(this)" class="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 px-2 py-0.5 rounded text-[10px] font-semibold transition active:scale-95">
+          <span class="font-bold text-pink-400">${langName}</span>
+          <button onclick="copySpecificCode(this)" class="bg-pink-950 hover:bg-pink-900 text-pink-300 border border-pink-500/50 px-2 py-0.5 rounded text-[10px] font-bold transition active:scale-95">
             [COPY_CODE]
           </button>
         `;
 
-        // Pindahkan elemen <pre> ke dalam container baru
         pre.parentNode.insertBefore(container, pre);
         container.appendChild(header);
         container.appendChild(pre);
 
-        // Simpan data kode murni ke dalam atribut tombol
         header.querySelector('button').dataset.code = codeText;
       });
     }
 
-    /* --- Fungsi Menyalin Kode di Kotak Terkait Saja --- */
     function copySpecificCode(button) {
       const codeToCopy = button.dataset.code;
       navigator.clipboard.writeText(codeToCopy).then(() => {
         const originalText = button.innerText;
         button.innerText = '[COPIED!]';
-        button.classList.replace('text-emerald-300', 'text-cyan-300');
+        button.classList.replace('text-pink-300', 'text-cyan-300');
         setTimeout(() => {
           button.innerText = originalText;
-          button.classList.replace('text-cyan-300', 'text-emerald-300');
+          button.classList.replace('text-cyan-300', 'text-pink-300');
         }, 2000);
       });
     }
