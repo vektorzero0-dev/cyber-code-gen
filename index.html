@@ -64,26 +64,31 @@
       );
     }
 
+    /* Memastikan teks pada tag output bisa diblok / diseleksi bebas di HP */
+    .selectable-text {
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+      user-select: text !important;
+    }
+
     /* Custom Scrollbar */
     #ui-wrapper::-webkit-scrollbar { width: 4px; }
     #ui-wrapper::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 2px; }
   </style>
 </head>
-<body class="text-cyan-400 select-none">
+<body class="text-cyan-400">
 
-  <!-- Background Canvas Matrix -->
   <canvas id="matrixCanvas"></canvas>
 
-  <!-- Main UI Layer -->
   <div id="ui-wrapper">
     <div class="min-h-screen flex flex-col p-4 sm:p-6 w-full max-w-xl mx-auto justify-between">
       
-      <!-- Header Terminal -->
-      <header class="w-full border-b border-cyan-500/40 pb-3 mb-4 flex justify-between items-center backdrop-blur-md bg-slate-950/80 p-3 rounded-lg border-l-2 border-l-cyan-400">
+      <header class="w-full border-b border-cyan-500/40 pb-3 mb-4 flex justify-between items-center backdrop-blur-md bg-slate-950/80 p-3 rounded-lg border-l-2 border-l-cyan-400 select-none">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
           <h1 class="text-lg sm:text-xl font-bold tracking-wider text-cyan-300 glow-cyan">
-            CYBER_GEN<span class="text-xs text-emerald-400 font-normal ml-1">v5.2</span>
+            CYBER_GEN<span class="text-xs text-emerald-400 font-normal ml-1">v5.4</span>
           </h1>
         </div>
         <span class="text-[10px] border border-cyan-500/50 px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-300 tracking-widest font-bold">
@@ -91,44 +96,46 @@
         </span>
       </header>
 
-      <!-- Main Input/Output Section -->
       <main class="w-full space-y-4 flex-1">
         
-        <!-- Input Terminal -->
         <div class="bg-slate-950/90 border border-cyan-500/40 p-3.5 glow-box-cyan backdrop-blur-md cyber-card relative">
           <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400"></div>
-          <label class="block text-xs font-semibold text-cyan-300 mb-2 flex justify-between tracking-wider">
+          <label class="block text-xs font-semibold text-cyan-300 mb-2 flex justify-between tracking-wider select-none">
             <span>[01] INPUT_TERMINAL_PROMPT</span>
             <span class="text-emerald-400 text-[10px]">CORE_ENGINE</span>
           </label>
-          <textarea id="prompt" rows="5" placeholder="// Ketik perintah koding di sini (misal: buatkan fungsi login android PHP)..." 
-            class="w-full bg-black/90 border border-cyan-900 rounded p-2.5 text-xs text-cyan-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-mono resize-none leading-relaxed placeholder-slate-600"></textarea>
+          <textarea id="prompt" rows="5" placeholder="// Ketik perintah koding di sini..." 
+            class="w-full bg-black/90 border border-cyan-900 rounded p-2.5 text-xs text-cyan-200 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-mono resize-none leading-relaxed placeholder-slate-600 selectable-text"></textarea>
         </div>
 
-        <!-- Action Button -->
         <button onclick="generateCode()" id="btnGenerate" 
-          class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs tracking-widest transition-all duration-200 glow-btn active:scale-95 uppercase cyber-card">
+          class="w-full py-3.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black text-xs tracking-widest transition-all duration-200 glow-btn active:scale-95 uppercase cyber-card select-none">
           &gt;&gt; EXECUTE_GENERATION &lt;&lt;
         </button>
 
-        <!-- Output Code Container -->
         <div class="bg-slate-950/95 border border-cyan-500/40 p-3.5 glow-box-cyan backdrop-blur-md cyber-card relative">
           <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400"></div>
-          <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-cyan-900/80">
-            <span class="text-xs font-semibold text-cyan-300 tracking-wider">[02] GENERATED_CODE_OUTPUT</span>
-            <button onclick="copyOutput()" class="text-[10px] bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/50 px-2 py-0.5 rounded transition font-semibold">
-              [COPY_CODE]
-            </button>
+          <div class="flex justify-between items-center mb-2 pb-1.5 border-b border-cyan-900/80 select-none">
+            <span class="text-xs font-semibold text-cyan-300 tracking-wider">[02] GENERATED_OUTPUT</span>
+            
+            <div class="flex gap-2">
+              <button onclick="copyOnlyCode()" class="text-[10px] bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/50 px-2 py-0.5 rounded transition font-semibold active:scale-95">
+                [COPY_CODE]
+              </button>
+              <button onclick="copyAllOutput()" class="text-[10px] bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/50 px-2 py-0.5 rounded transition font-semibold active:scale-95">
+                [COPY_ALL]
+              </button>
+            </div>
           </div>
-          <pre id="output" class="text-[11px] text-emerald-400 font-mono overflow-x-auto min-h-[120px] max-h-[300px] sm:max-h-[400px] whitespace-pre-wrap break-words leading-relaxed">
+          
+          <pre id="output" class="text-[11px] text-emerald-400 font-mono overflow-x-auto min-h-[120px] max-h-[300px] sm:max-h-[400px] whitespace-pre-wrap break-words leading-relaxed selectable-text">
 // System idle. Waiting for input prompt...
           </pre>
         </div>
 
       </main>
 
-      <!-- Footer Identity -->
-      <footer class="w-full mt-6 pt-3 border-t border-cyan-500/20 text-center text-[10px] text-cyan-600 space-y-1 bg-slate-950/80 p-2 rounded-lg border-b-2 border-b-cyan-500/40">
+      <footer class="w-full mt-6 pt-3 border-t border-cyan-500/20 text-center text-[10px] text-cyan-600 space-y-1 bg-slate-950/80 p-2 rounded-lg border-b-2 border-b-cyan-500/40 select-none">
         <p class="font-bold tracking-widest text-cyan-400">
           DEV: <span class="text-emerald-400 glow-emerald">ZEEO</span>
         </p>
@@ -147,7 +154,7 @@
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
     let drops = [];
-    const fontSize = 22; // Ukuran font besar khusus Android
+    const fontSize = 22;
     const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ日ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ';
 
     function initMatrix() {
@@ -164,7 +171,7 @@
       ctx.fillStyle = 'rgba(2, 6, 23, 0.04)'; 
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#00f3ff'; // Electric Cyan Bold
+      ctx.fillStyle = '#00f3ff';
       ctx.font = 'bold ' + fontSize + 'px monospace';
 
       for (let i = 0; i < drops.length; i++) {
@@ -194,22 +201,21 @@
 
       if (!prompt) {
         output.innerText = '// ERROR: Prompt terminal tidak boleh kosong!';
-        output.className = 'text-[11px] font-mono overflow-x-auto min-h-[120px] max-h-[300px] sm:max-h-[400px] whitespace-pre-wrap break-words leading-relaxed text-red-400';
+        output.className = 'text-[11px] font-mono overflow-x-auto min-h-[120px] max-h-[300px] sm:max-h-[400px] whitespace-pre-wrap break-words leading-relaxed text-red-400 selectable-text';
         return;
       }
 
       document.activeElement.blur();
-      output.className = 'text-[11px] font-mono overflow-x-auto min-h-[120px] max-h-[300px] sm:max-h-[400px] whitespace-pre-wrap break-words leading-relaxed text-emerald-400';
+      output.className = 'text-[11px] font-mono overflow-x-auto min-h-[120px] max-h-[300px] sm:max-h-[400px] whitespace-pre-wrap break-words leading-relaxed text-emerald-400 selectable-text';
       
       btn.disabled = true;
       btn.innerText = 'PROCESSING_DATA...';
       output.innerText = '> INITIALIZING_REQUEST...\n> CONNECTING_TO_BACKEND...\n> GENERATING_SOURCE_CODE...';
 
       try {
-        // Otomatis mengenali apakah dipanggil di Vercel atau GitHub Pages
         const endpoint = window.location.hostname.includes('vercel.app') 
           ? '/api/generate' 
-          : 'https://cyber-code-gen.vercel.app/api/generate'; // Ganti domain ini dengan domain Vercel Anda jika berbeda
+          : 'https://cyber-code-gen.vercel.app/api/generate';
 
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -217,7 +223,6 @@
           body: JSON.stringify({ prompt })
         });
 
-        // Verifikasi apakah respon berupa JSON valid
         const contentType = response.headers.get("content-type");
         if (!contentType || !contentType.includes("application/json")) {
           throw new Error("Server mengirim respon bukan JSON. Pastikan file API tersimpan di folder 'api/generate.js'.");
@@ -243,10 +248,48 @@
       }
     }
 
-    function copyOutput() {
-      const text = document.getElementById('output').innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Kode berhasil disalin ke clipboard!');
+    /* --- Opsi 1: Menyalin Khusus Kode Program Saja --- */
+    function copyOnlyCode() {
+      const outputText = document.getElementById('output').innerText;
+
+      if (!outputText || outputText.startsWith('// System idle') || outputText.startsWith('// ERROR')) {
+        alert('Tidak ada kode yang bisa disalin!');
+        return;
+      }
+
+      // Mencari teks di dalam blok kode (misalnya ```html ... ```)
+      const codeBlockRegex = /```[\w]*\n([\s\S]*?)```/g;
+      let matches;
+      let extractedCodes = [];
+
+      while ((matches = codeBlockRegex.exec(outputText)) !== null) {
+        extractedCodes.push(matches[1].trim());
+      }
+
+      if (extractedCodes.length > 0) {
+        const finalCode = extractedCodes.join('\n\n/* ---------------------------------- */\n\n');
+        navigator.clipboard.writeText(finalCode).then(() => {
+          alert('Hanya kode program yang berhasil disalin!');
+        });
+      } else {
+        // Jika tidak ada tanda ```, maka salin seluruh teks sebagai cadangan
+        navigator.clipboard.writeText(outputText).then(() => {
+          alert('Kode berhasil disalin!');
+        });
+      }
+    }
+
+    /* --- Opsi 2: Menyalin Seluruh Hasil (Kode + Penjelasan) --- */
+    function copyAllOutput() {
+      const outputText = document.getElementById('output').innerText;
+
+      if (!outputText || outputText.startsWith('// System idle') || outputText.startsWith('// ERROR')) {
+        alert('Tidak ada teks yang bisa disalin!');
+        return;
+      }
+
+      navigator.clipboard.writeText(outputText).then(() => {
+        alert('Seluruh hasil (kode + penjelasan) berhasil disalin!');
       });
     }
   </script>
