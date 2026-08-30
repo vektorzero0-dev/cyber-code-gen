@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  // Setup CORS agar bisa diakses dari mana saja (GitHub Pages / Vercel / Lokal)
+  // Config Header CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -8,23 +8,18 @@ export default async function handler(req, res) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // Respons cepat untuk preflight request OPTIONS
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Hanya izinkan method POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  // Mengambil API Key dari Environment Variable Vercel
   const API_KEY = process.env.GEMINI_API_KEY;
 
   if (!API_KEY) {
-    return res.status(500).json({ 
-      error: 'GEMINI_API_KEY belum dikonfigurasi di Environment Variables Vercel.' 
-    });
+    return res.status(500).json({ error: 'GEMINI_API_KEY belum terpasang di Vercel Environment Variables.' });
   }
 
   const { prompt } = req.body || {};
@@ -45,8 +40,15 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+
+    // Menampilkan detail pesan error dari Google jika API Key salah atau kuota habis
+    if (!response.ok) {
+      const errorMsg = data.error?.message || JSON.stringify(data.error) || 'Gagal menghubungi Gemini API';
+      return res.status(response.status).json({ error: errorMsg });
+    }
+
     return res.status(200).json(data);
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message || ' Terjadi kesalahan pada server.' });
   }
 }
